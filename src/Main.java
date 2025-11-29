@@ -47,7 +47,7 @@ public class Main {
         DayOfWeek day = inputDay();
 
         TreeMap<TimeOfDay, ArrayList<TrainingSession>> trainingsDay = timetable.getTrainingSessionsForDay(day);
-        if(trainingsDay != null) {
+        if (trainingsDay != null) {
             System.out.println("Список тренировок на " + day + ":");
             trainingsDay.forEach((time, trainings) -> {
                 System.out.println(time);
@@ -63,7 +63,7 @@ public class Main {
         TimeOfDay time = inputTime();
 
         ArrayList<TrainingSession> trainingsDayAndTime = timetable.getTrainingSessionsForDayAndTime(day, time);
-        if(trainingsDayAndTime != null) {
+        if (trainingsDayAndTime != null) {
             System.out.println("Тренировки на " + day + " начинающиеся в " + time + ":");
             trainingsDayAndTime.forEach(training -> System.out.println(training));
         } else {
@@ -87,7 +87,7 @@ public class Main {
     private static void showCountByCoaches() {
         LinkedHashMap<Coach, Integer> data = timetable.getCountByCoaches();
 
-        if(data != null) {
+        if (data != null) {
             data.forEach((coach, count) -> {
                 System.out.println(coach + ": " + count + " тренировок");
             });
@@ -97,16 +97,16 @@ public class Main {
     }
 
     private static DayOfWeek inputDay() {
-        while(true) {
+        while (true) {
             System.out.println("Выберите день недели:");
             Integer dayNumber = 1;
-            for(DayOfWeek day : DayOfWeek.values()) {
+            for (DayOfWeek day : DayOfWeek.values()) {
                 System.out.println(dayNumber + " - " + day);
                 dayNumber++;
             }
             try {
                 int choice = scanner.nextInt() - 1;
-                if(choice >= 0 && choice < DayOfWeek.values().length) {
+                if (choice >= 0 && choice < DayOfWeek.values().length) {
                     return DayOfWeek.values()[choice];
                 } else {
                     System.out.println("Ожидается число от 1 до " + DayOfWeek.values().length);
@@ -124,11 +124,11 @@ public class Main {
 
         System.out.println("Введите время начала тренировок:");
         boolean running = true;
-        while(running) {
+        while (running) {
             System.out.println("час (от 0 до 23):");
             try {
                 choiceHour = scanner.nextInt();
-                if(choiceHour < 0 || choiceHour > 23) {
+                if (choiceHour < 0 || choiceHour > 23) {
                     System.out.println("Ожидается число от 0 до 23");
                 } else {
                     running = false;
@@ -140,11 +140,11 @@ public class Main {
         }
 
         running = true;
-        while(running) {
+        while (running) {
             System.out.println("минуты (от 0 до 59):");
             try {
                 choiceMinute = scanner.nextInt();
-                if(choiceMinute < 0 || choiceMinute > 59) {
+                if (choiceMinute < 0 || choiceMinute > 59) {
                     System.out.println("Ожидается число от 0 до 59");
                 } else {
                     running = false;
@@ -160,16 +160,16 @@ public class Main {
     }
 
     private static Group inputGroup() {
-        while(true) {
+        while (true) {
             int countGroup = 1;
             System.out.println("Выберите группу:");
-            for(Group group : groups) {
+            for (Group group : groups) {
                 System.out.println(countGroup + " - " + group);
                 countGroup++;
             }
             try {
                 int choice = scanner.nextInt();
-                if(choice >= 1 && choice <= groups.size()) {
+                if (choice >= 1 && choice <= groups.size()) {
                     return groups.get(choice - 1);
                 } else {
                     System.out.println("Ожидается число от 0 до " + groups.size());
@@ -182,16 +182,16 @@ public class Main {
     }
 
     private static Coach inputCoach() {
-        while(true) {
+        while (true) {
             int countCoach = 1;
             System.out.println("Выберите тренера:");
-            for(Coach coach : coaches) {
+            for (Coach coach : coaches) {
                 System.out.println(countCoach + " - " + coach);
                 countCoach++;
             }
             try {
                 int choice = scanner.nextInt();
-                if(choice >= 1 && choice <= coaches.size()) {
+                if (choice >= 1 && choice <= coaches.size()) {
                     return coaches.get(choice - 1);
                 } else {
                     System.out.println("Ожидается число от 0 до " + coaches.size());
