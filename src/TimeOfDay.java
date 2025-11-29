@@ -32,13 +32,13 @@ public class TimeOfDay implements Comparable<TimeOfDay> {
 
     @Override
     public int compareTo(TimeOfDay o) {
-        return (hours*60+minutes) - (o.hours*60+o.minutes);
+        return (hours * 60 + minutes) - (o.hours * 60 + o.minutes);
     }
 
     @Override
     public String toString() {
         String minutesStr = "";
-        if(minutes < 10) {
+        if (minutes < 10) {
             minutesStr = "0" + minutes;
         } else {
             minutesStr = minutes + "";
