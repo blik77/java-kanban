@@ -9,7 +9,7 @@ public class Main {
     public static void main(String[] args) {
         createTimetable(); // наполняем данными для работы
         boolean running = true;
-        while(running) {
+        while (running) {
             showMenu();
             String choice = scanner.next();
             switch (choice) {
