@@ -17,7 +17,7 @@ public class TimetableTest {
         //Проверить, что за понедельник вернулось одно занятие
         Assertions.assertEquals(1, timetable.getTrainingSessionsForDay(DayOfWeek.MONDAY).size());
         //Проверить, что за вторник не вернулось занятий
-        Assertions.assertNull(timetable.getTrainingSessionsForDay(DayOfWeek.TUESDAY));
+        Assertions.assertTrue(timetable.getTrainingSessionsForDay(DayOfWeek.TUESDAY).isEmpty());
     }
 
     @Test
@@ -51,7 +51,7 @@ public class TimetableTest {
         Assertions.assertEquals("13:00", timetable.getTrainingSessionsForDay(DayOfWeek.THURSDAY).firstKey().toString());
         Assertions.assertEquals("20:00", timetable.getTrainingSessionsForDay(DayOfWeek.THURSDAY).lastKey().toString());
         // Проверить, что за вторник не вернулось занятий
-        Assertions.assertNull(timetable.getTrainingSessionsForDay(DayOfWeek.TUESDAY));
+        Assertions.assertTrue(timetable.getTrainingSessionsForDay(DayOfWeek.TUESDAY).isEmpty());
     }
 
     @Test
@@ -109,9 +109,9 @@ public class TimetableTest {
         timetable.addNewTrainingSession(trainingSession7);
 
         //Проверить, что у Шмотков 4 тренировки в неделю
-        Assertions.assertEquals(4, timetable.getCountByCoaches().get(coachShmotkov));
+        Assertions.assertEquals(4, timetable.getCountByCoaches().ceiling(new CounterOfTrainings(coachShmotkov, 1)).getCount());
         //Проверить, что у Волкова не тренировала в эту неделю
-        Assertions.assertNull(timetable.getCountByCoaches().get(coachVolkova));
+        Assertions.assertFalse(timetable.getCountByCoaches().contains(new CounterOfTrainings(coachVolkova, 0)));
         //Проверить, что количество активных тренеров
         Assertions.assertEquals(3, timetable.getCountByCoaches().size());
     }

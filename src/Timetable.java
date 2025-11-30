@@ -1,74 +1,64 @@
 import java.util.*;
 
 public class Timetable {
-    private final HashMap<DayOfWeek, TreeMap<TimeOfDay, ArrayList<TrainingSession>>> timetable = new HashMap<>();
+    private final Map<DayOfWeek, TreeMap<TimeOfDay, List<TrainingSession>>> timetable;
+
+    public Timetable() {
+        timetable = new HashMap<>();
+        timetable.put(DayOfWeek.MONDAY, new TreeMap<>());
+        timetable.put(DayOfWeek.TUESDAY, new TreeMap<>());
+        timetable.put(DayOfWeek.WEDNESDAY, new TreeMap<>());
+        timetable.put(DayOfWeek.THURSDAY, new TreeMap<>());
+        timetable.put(DayOfWeek.FRIDAY, new TreeMap<>());
+        timetable.put(DayOfWeek.SATURDAY, new TreeMap<>());
+        timetable.put(DayOfWeek.SUNDAY, new TreeMap<>());
+    }
 
     public void addNewTrainingSession(TrainingSession trainingSession) {
-        if (timetable.containsKey(trainingSession.getDayOfWeek())) { // проверка на ключ "день недели"
-            if (timetable.get(trainingSession.getDayOfWeek())
-                    .containsKey(trainingSession.getTimeOfDay())) { // проверка на ключ "время дня"
-                timetable.get(trainingSession.getDayOfWeek())
-                    .get(trainingSession.getTimeOfDay()). add(trainingSession);
-            } else {
-                ArrayList<TrainingSession> trainingSessions = new ArrayList<>();
-                trainingSessions.add(trainingSession);
-                timetable.get(trainingSession.getDayOfWeek())
-                    .put(trainingSession.getTimeOfDay(), trainingSessions);
-            }
+        Map<TimeOfDay, List<TrainingSession>> dayTrainingSessions = timetable.get(trainingSession.getDayOfWeek());
+
+        if (dayTrainingSessions.containsKey(trainingSession.getTimeOfDay())) {
+            dayTrainingSessions.get(trainingSession.getTimeOfDay()).add(trainingSession);
         } else {
-            TreeMap<TimeOfDay, ArrayList<TrainingSession>> dayTrainingSessions = new TreeMap<>();
-            ArrayList<TrainingSession> trainingSessions = new ArrayList<>();
-            trainingSessions.add(trainingSession);
-            dayTrainingSessions.put(trainingSession.getTimeOfDay(), trainingSessions);
-            timetable.put(trainingSession.getDayOfWeek(), dayTrainingSessions);
+            dayTrainingSessions.put(trainingSession.getTimeOfDay(), new ArrayList<>(List.of(trainingSession)));
         }
     }
 
-    public TreeMap<TimeOfDay, ArrayList<TrainingSession>> getTrainingSessionsForDay(DayOfWeek dayOfWeek) {
+    public TreeMap<TimeOfDay, List<TrainingSession>> getTrainingSessionsForDay(DayOfWeek dayOfWeek) {
         return timetable.get(dayOfWeek);
     }
 
-    public ArrayList<TrainingSession> getTrainingSessionsForDayAndTime(DayOfWeek dayOfWeek, TimeOfDay timeOfDay) {
-        return timetable.get(dayOfWeek).get(timeOfDay);
+    public List<TrainingSession> getTrainingSessionsForDayAndTime(DayOfWeek dayOfWeek, TimeOfDay timeOfDay) {
+        return timetable.get(dayOfWeek).getOrDefault(timeOfDay, new ArrayList<>());
     }
 
-    public LinkedHashMap<Coach, Integer> getCountByCoaches() {
-        HashMap<Coach, Integer> countByCoach = new HashMap<>();
-        LinkedHashMap<Coach, Integer> countByCoachSort = new LinkedHashMap<>();
-        Comparator<Integer> countComparator = new Comparator<>() {
-            @Override
-            public int compare(Integer count1, Integer count2) {
-                return count2 - count1;
-            }
-        };
-        TreeMap<Integer, ArrayList<Coach>> counterOfTrainings = new TreeMap<>(countComparator);
+    public TreeSet<CounterOfTrainings> getCountByCoaches() {
+        Coach coachShmotkov = new Coach("Шмотков", "В.", "В.");
+        Coach coachSemenov = new Coach("Семёнов", "В.", "К.");
+
+        CounterOfTrainings x1 = new CounterOfTrainings(coachShmotkov, 1);
+        CounterOfTrainings x2 = new CounterOfTrainings(coachSemenov, 1);
+
+        System.out.println(Objects.equals(x1, x2));
+        System.out.println(x1.equals(x2));
+
+
         // считаем сколько тренировок у тренера
+        Map<Coach, Integer> countByCoach = new HashMap<>();
         timetable.forEach((day, dayTrainings) -> {
             dayTrainings.forEach((time, timeTrainings) -> {
                 timeTrainings.forEach(training -> {
-                    if (countByCoach.containsKey(training.getCoach())) {
-                        countByCoach.put(training.getCoach(), countByCoach.get(training.getCoach()) + 1);
-                    } else {
-                        countByCoach.put(training.getCoach(), 1);
-                    }
+                    countByCoach.compute(training.getCoach(), (key, value) -> value == null ? 1 : value + 1);
                 });
             });
         });
         // сортируем по количеству тренировок
+        TreeSet<CounterOfTrainings> counterOfTrainings = new TreeSet<>();
         countByCoach.forEach((coach, count) -> {
-            if (counterOfTrainings.containsKey(count)) {
-                counterOfTrainings.get(count).add(coach);
-            } else {
-                counterOfTrainings.put(count, new ArrayList<>(List.of(coach)));
-            }
-        });
-        // формируем ответ
-        counterOfTrainings.forEach((count, coaches) -> {
-            coaches.forEach(coach -> {
-                countByCoachSort.put(coach, count);
-            });
+            CounterOfTrainings newRec = new CounterOfTrainings(coach, count);
+            System.out.println("Добавляем " + newRec + ": " + counterOfTrainings.add(newRec));
         });
 
-        return countByCoachSort;
+        return counterOfTrainings;
     }
 }

@@ -46,15 +46,15 @@ public class Main {
     private static void showTrainingsForDay() {
         DayOfWeek day = inputDay();
 
-        TreeMap<TimeOfDay, ArrayList<TrainingSession>> trainingsDay = timetable.getTrainingSessionsForDay(day);
-        if (trainingsDay != null) {
+        TreeMap<TimeOfDay, List<TrainingSession>> trainingsDay = timetable.getTrainingSessionsForDay(day);
+        if (trainingsDay.isEmpty()) {
+            System.out.println("Тренировки в " + day + " отсутствуют");
+        } else {
             System.out.println("Список тренировок на " + day + ":");
             trainingsDay.forEach((time, trainings) -> {
                 System.out.println(time);
                 trainings.forEach(training -> System.out.println(training));
             });
-        } else {
-            System.out.println("Тренировки в " + day + " отсутствуют");
         }
     }
 
@@ -62,12 +62,12 @@ public class Main {
         DayOfWeek day = inputDay();
         TimeOfDay time = inputTime();
 
-        ArrayList<TrainingSession> trainingsDayAndTime = timetable.getTrainingSessionsForDayAndTime(day, time);
-        if (trainingsDayAndTime != null) {
+        List<TrainingSession> trainingsDayAndTime = timetable.getTrainingSessionsForDayAndTime(day, time);
+        if (trainingsDayAndTime.isEmpty()) {
+            System.out.println("Тренировки в " + day + " начинающиеся в " + time + " отсутствуют");
+        } else {
             System.out.println("Тренировки на " + day + " начинающиеся в " + time + ":");
             trainingsDayAndTime.forEach(training -> System.out.println(training));
-        } else {
-            System.out.println("Тренировки в " + day + " начинающиеся в " + time + " отсутствуют");
         }
     }
 
@@ -85,14 +85,12 @@ public class Main {
     }
 
     private static void showCountByCoaches() {
-        LinkedHashMap<Coach, Integer> data = timetable.getCountByCoaches();
+        Set<CounterOfTrainings> counterOfTrainings = timetable.getCountByCoaches();
 
-        if (data != null) {
-            data.forEach((coach, count) -> {
-                System.out.println(coach + ": " + count + " тренировок");
-            });
-        } else {
+        if (counterOfTrainings.isEmpty()) {
             System.out.println("Данные отсутствуют");
+        } else {
+            counterOfTrainings.forEach((counter) -> System.out.println(counter));
         }
     }
 
