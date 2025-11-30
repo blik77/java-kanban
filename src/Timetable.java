@@ -33,30 +33,23 @@ public class Timetable {
     }
 
     public TreeSet<CounterOfTrainings> getCountByCoaches() {
-        Coach coachShmotkov = new Coach("Шмотков", "В.", "В.");
-        Coach coachSemenov = new Coach("Семёнов", "В.", "К.");
-
-        CounterOfTrainings x1 = new CounterOfTrainings(coachShmotkov, 1);
-        CounterOfTrainings x2 = new CounterOfTrainings(coachSemenov, 1);
-
-        System.out.println(Objects.equals(x1, x2));
-        System.out.println(x1.equals(x2));
-
-
-        // считаем сколько тренировок у тренера
-        Map<Coach, Integer> countByCoach = new HashMap<>();
+        TreeSet<CounterOfTrainings> counterOfTrainings = new TreeSet<>();
         timetable.forEach((day, dayTrainings) -> {
             dayTrainings.forEach((time, timeTrainings) -> {
                 timeTrainings.forEach(training -> {
-                    countByCoach.compute(training.getCoach(), (key, value) -> value == null ? 1 : value + 1);
+                    CounterOfTrainings newRec = new CounterOfTrainings(training.getCoach(), 0);
+                    counterOfTrainings.forEach(record -> {
+                        if (record.getCoach().equals(training.getCoach())) {
+                            newRec.setCount(record.getCount());
+                        }
+                    });
+                    if (newRec.getCount() > 0) {
+                        counterOfTrainings.remove(newRec);
+                    }
+                    newRec.setCount(newRec.getCount() + 1);
+                    counterOfTrainings.add(newRec);
                 });
             });
-        });
-        // сортируем по количеству тренировок
-        TreeSet<CounterOfTrainings> counterOfTrainings = new TreeSet<>();
-        countByCoach.forEach((coach, count) -> {
-            CounterOfTrainings newRec = new CounterOfTrainings(coach, count);
-            System.out.println("Добавляем " + newRec + ": " + counterOfTrainings.add(newRec));
         });
 
         return counterOfTrainings;

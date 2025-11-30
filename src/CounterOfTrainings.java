@@ -11,7 +11,13 @@ public class CounterOfTrainings implements Comparable<CounterOfTrainings> {
 
     @Override
     public int compareTo(CounterOfTrainings o) {
-        return o.count - this.count;
+        int cmp = o.count.compareTo(this.count);
+        if (cmp != 0) return cmp;
+        cmp = this.coach.getSurname().compareTo(o.coach.getSurname());
+        if (cmp != 0) return cmp;
+        cmp = this.coach.getName().compareTo(o.coach.getName());
+        if (cmp != 0) return cmp;
+        return this.coach.getMiddleName().compareTo(o.coach.getMiddleName());
     }
 
     @Override
@@ -34,5 +40,13 @@ public class CounterOfTrainings implements Comparable<CounterOfTrainings> {
     @Override
     public String toString() {
         return coach + ": " + count + " тренировок";
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
+    public Coach getCoach() {
+        return coach;
     }
 }

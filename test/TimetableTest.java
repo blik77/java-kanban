@@ -59,16 +59,27 @@ public class TimetableTest {
         Timetable timetable = new Timetable();
 
         Group group = new Group("Акробатика для детей", Age.CHILD, 60);
+        Group group1 = new Group("Группа 1", Age.ADULT, 90);
+        Group group2 = new Group("Группа 2", Age.ADULT, 80);
         Coach coach = new Coach("Васильев", "Николай", "Сергеевич");
+        Coach coachShmotkov = new Coach("Шмотков", "В.", "В.");
         TrainingSession singleTrainingSession = new TrainingSession(group, coach,
                 DayOfWeek.MONDAY, new TimeOfDay(13, 0));
+        TrainingSession ts1 = new TrainingSession(group1, coachShmotkov,
+                DayOfWeek.MONDAY, new TimeOfDay(16, 0));
+        TrainingSession ts2 = new TrainingSession(group2, coach,
+                DayOfWeek.MONDAY, new TimeOfDay(16, 0));
 
         timetable.addNewTrainingSession(singleTrainingSession);
+        timetable.addNewTrainingSession(ts1);
+        timetable.addNewTrainingSession(ts2);
 
         //Проверить, что за понедельник в 13:00 вернулось одно занятие
         Assertions.assertEquals(1, timetable.getTrainingSessionsForDayAndTime(DayOfWeek.MONDAY, new TimeOfDay(13, 0)).size());
         //Проверить, что за понедельник в 14:00 не вернулось занятий
-        Assertions.assertNull(timetable.getTrainingSessionsForDayAndTime(DayOfWeek.MONDAY, new TimeOfDay(14, 0)));
+        Assertions.assertTrue(timetable.getTrainingSessionsForDayAndTime(DayOfWeek.MONDAY, new TimeOfDay(14, 0)).isEmpty());
+        //Проверить, что за понедельник в 16:00 начинается 2 тренировки
+        Assertions.assertEquals(2, timetable.getTrainingSessionsForDayAndTime(DayOfWeek.MONDAY, new TimeOfDay(16, 0)).size());
     }
 
     @Test
@@ -109,7 +120,7 @@ public class TimetableTest {
         timetable.addNewTrainingSession(trainingSession7);
 
         //Проверить, что у Шмотков 4 тренировки в неделю
-        Assertions.assertEquals(4, timetable.getCountByCoaches().ceiling(new CounterOfTrainings(coachShmotkov, 1)).getCount());
+        Assertions.assertEquals(4, timetable.getCountByCoaches().ceiling(new CounterOfTrainings(coachShmotkov, 4)).getCount());
         //Проверить, что у Волкова не тренировала в эту неделю
         Assertions.assertFalse(timetable.getCountByCoaches().contains(new CounterOfTrainings(coachVolkova, 0)));
         //Проверить, что количество активных тренеров

@@ -2,8 +2,8 @@ import java.util.*;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
-    private static final ArrayList<Group> groups = new ArrayList<>();
-    private static final ArrayList<Coach> coaches = new ArrayList<>();
+    private static final List<Group> groups = new ArrayList<>();
+    private static final List<Coach> coaches = new ArrayList<>();
     private static final Timetable timetable = new Timetable();
 
     public static void main(String[] args) {
